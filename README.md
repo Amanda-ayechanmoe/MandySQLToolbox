@@ -36,3 +36,22 @@ FROM
   GROUP BY 1,2,3,..
 )a
 WHERE records = 2;</ins>
+
+## 3 ways to remove duplicate 
+
+1. DISTINCT\
+   <ins> SELECT DISTINCT a.customer_id, a.customer_name, a.customer_email
+   FROM customers a
+   JOIN transactions b on a.customr_id = b.customer_id </ins>
+2. GROUP BY\
+    <ins> SELECT a.customer_id, a.customer_name, a.customer_email
+    FROM customers a
+    JOIN transactions b on a.customr_id = b.customer_id
+    GROUP BY 1,2,3 </ins>
+3. To perform an aggregation that returns one row per entity\
+   <ins> SELECT customer_id
+   ,min(transaction_date) as first_transaction_date
+   ,max(transaction_date) as last_transaction_date
+   ,count(*) as total orders
+   FROM table
+   GROUP BY customer_id </ins>
