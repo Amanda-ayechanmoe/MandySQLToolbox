@@ -55,3 +55,14 @@ WHERE records = 2;</ins>
    ,count(*) as total orders
    FROM table
    GROUP BY customer_id </ins>
+
+## Check missing data by comparing values in two tables
+
+We might expect that the customer in the transactions table also has a record in the customer table. To check this, query the table using a LEFT JOIN and add a WHERE condition to find the customers that do not exist in the second table.
+
+<ins> SELECT distinct a.customer_id
+FROM transactions a
+LEFT JOIN customers b on a.customer_id = b.customer_id
+WHERE b.customer_id is null ; </ins>
+
+
