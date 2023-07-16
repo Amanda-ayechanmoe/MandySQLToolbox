@@ -4,16 +4,18 @@ Collection of useful SQL
 ## Frequency, the occurrence of each value in the field, count the number of records
 
 The number of rows can be found with count(*) and profiled field is in the GROUP BY
-
-<ins>SELECT column_name, count(*) as quantity 
+``` SQL
+SELECT column_name, count(*) as quantity 
 FROM table_name
-GROUP BY 1 ;</ins>
+GROUP BY 1 ;
+```
 
 **We can use count(*) when we want the number of records but use count distinct to find out how many unique items there are**
 
 ## Finding duplicates 
 
-<ins>SELECT count(*)
+``` SQL
+SELECT count(*)
 FROM
 (
   SELECT column_a, column_b, column_c,.....
@@ -22,12 +24,13 @@ FROM
   GROUP BY 1,2,3,...
 ) a
 WEHRE records>1;</ins>
-
+```
 This will tell us whether there are any cases of duplicates. If the query returns 0, no duplicate.
 
 ## Full details on which records have duplicates
 
-<ins>SELECT *
+``` SQL
+SELECT *
 FROM
 (  
   SELECT column_a, column_b, column_c,.....
@@ -35,26 +38,33 @@ FROM
   FROM ...
   GROUP BY 1,2,3,..
 )a
-WHERE records = 2;</ins>
+WHERE records = 2;
+```
 
 ## 3 ways to remove duplicate 
 
-1. DISTINCT\
-   <ins> SELECT DISTINCT a.customer_id, a.customer_name, a.customer_email
+1. DISTINCT
+   ``` SQL
+   SELECT DISTINCT a.customer_id, a.customer_name, a.customer_email
    FROM customers a
-   JOIN transactions b on a.customr_id = b.customer_id </ins>
-2. GROUP BY\
-    <ins> SELECT a.customer_id, a.customer_name, a.customer_email
+   JOIN transactions b on a.customr_id = b.customer_id
+   ```
+2. GROUP BY
+    ``` SQL
+    SELECT a.customer_id, a.customer_name, a.customer_email
     FROM customers a
     JOIN transactions b on a.customr_id = b.customer_id
-    GROUP BY 1,2,3 </ins>
-3. To perform an aggregation that returns one row per entity\
-   <ins> SELECT customer_id
+    GROUP BY 1,2,3
+    ```
+3. To perform an aggregation that returns one row per entity
+   ``` SQL
+   SELECT customer_id
    ,min(transaction_date) as first_transaction_date
    ,max(transaction_date) as last_transaction_date
    ,count(*) as total orders
    FROM table
-   GROUP BY customer_id </ins>
+   GROUP BY customer_id
+   ```
 
 ## Check missing data by comparing values in two tables
 
@@ -70,18 +80,20 @@ WHERE b.customer_id is null ; </ins>
 ### 1. Pivoting with CASE statements and aggregation
 It is a way to summarize data sets by arranging the data into rows, according to the value of an attribute, and columns, according to the values of another attribute.
 
-<ins>SELECT order_date\
-,sum(CASE WHEN product = 'shirt' then order_amount\
-          ELSE 0\
-          END) as shirts_amount\
-,sum(CASE WHEN product = 'shoes' then order_amount\
-          ELSE 0\
-          END) as shoes_amount\
-,sum(CASE WHEN product = 'hat' then order_amount\
-          ELSE 0\
-          END) as hats_amount\
-FROM orders\
-GROUP BY 1; </ins>
+```SQL
+SELECT order_date
+,sum(CASE WHEN product = 'shirt' then order_amount
+          ELSE 0
+          END) as shirts_amount
+,sum(CASE WHEN product = 'shoes' then order_amount
+          ELSE 0
+          END) as shoes_amount
+,sum(CASE WHEN product = 'hat' then order_amount
+          ELSE 0
+          END) as hats_amount
+FROM orders
+GROUP BY 1;
+```
 
 | order_date | shirts_amount | shoes_amount | hats_amount |
 | ----------- | ----------- |----------- | ----------- |
@@ -103,25 +115,27 @@ Move data stored in columns into rows.
 
 UNION is a way to combine data sets from multiple queries into a single result set. There are two forms UNION and UNION ALL. UNION removes duplicates from the result set whereas UNION ALL retains all records whether duplicates or not. UNION ALL is faster. The number of columns in each component query must match. The data type must match or be compatible (integer and float can be mixed). The column name in the result set comes from the first query.
 
-<ins> SELECT country \
-,'1980' as year \
-,year_1980 as population \
-FROM country_populations \
-  UNION ALL \
-SELECT country \
-,'1990' as year \
-,year_1990 as population \
-FROM country_populations \
-  UNION ALL \
-SELECT country \
-,'2000' as year \
-,year_2000 as population \
-FROM country_populations \
-  UNION ALL \
-SELECT country \
-,'2010' as year \
-,year_2010 as population \
+``` SQL
+SELECT country 
+,'1980' as year
+,year_1980 as population 
+FROM country_populations
+  UNION ALL
+SELECT country
+,'1990' as year
+,year_1990 as population
+FROM country_populations 
+  UNION ALL
+SELECT country
+,'2000' as year 
+,year_2000 as population
+FROM country_populations
+  UNION ALL
+SELECT country
+,'2010' as year
+,year_2010 as population
 FROM country_populations;
+```
 
 | Country | year | population 
 | ----------- | ----------- |----------- | 
