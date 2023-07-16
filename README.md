@@ -65,4 +65,31 @@ FROM transactions a
 LEFT JOIN customers b on a.customer_id = b.customer_id
 WHERE b.customer_id is null ; </ins>
 
+## Shaping Data - manipulating the way data is represented in columns and rows
+
+### 1. Pivoting with CASE statements and aggregation
+It is a way to summarize data sets by arranging the data into rows, according to the value of an attribute, and columns, according to the values of another attribute.
+
+<ins>SELECT order_date\
+,sum(CASE WHEN product = 'shirt' then order_amount\
+          ELSE 0\
+          END) as shirts_amount\
+,sum(CASE WHEN product = 'shoes' then order_amount\
+          ELSE 0\
+          END) as shoes_amount\
+,sum(CASE WHEN product = 'hat' then order_amount\
+          ELSE 0\
+          END) as hats_amount\
+FROM orders\
+GROUP BY 1; </ins>
+
+| order_date | shirts_amount | shoes_amount | hats_amount |
+| ----------- | ----------- |----------- | ----------- |
+| 2020-05-01 | 5268.56 | 1211.65 | 562.25 |
+| 2020-05-01 | 5533.84 | 522.25 | 325.62 |
+
+With Sum aggregation, we can optionally use "else 0" to avoid nulls in the result set. 
+With COUNT or COUNT DISTINCT, we should not include an ELSE statement, as doing so would inflate the result set. This is because the database won't count null but it will count a substitute value such as zero.
+Pivoting data with a combination of aggregation and CASE statements works well when there are a finite number of items to pivot.
+
 
