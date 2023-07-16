@@ -92,4 +92,41 @@ With Sum aggregation, we can optionally use "else 0" to avoid nulls in the resul
 With COUNT or COUNT DISTINCT, we should not include an ELSE statement, as doing so would inflate the result set. This is because the database won't count null but it will count a substitute value such as zero.
 Pivoting data with a combination of aggregation and CASE statements works well when there are a finite number of items to pivot.
 
+### 2. Unpivoting with UNION Statements
+Move data stored in columns into rows.
+
+| Country | year_1980 | year_1990 | year_2000 | year_2010 |
+| ----------- | ----------- |----------- | ----------- | ----------- 
+| Canada | 24,593 | 27,791 | 31,100 | 34,207 |
+| Mexico | 68,347 | 84,634 | 99,775 | 114,061 |
+| United States | 249,623 | 282,162 | 325.62 | 309,326 |
+
+UNION is a way to combine data sets from multiple queries into a single result set. There are two forms UNION and UNION ALL. UNION removes duplicates from the result set whereas UNION ALL retains all records whether duplicates or not. UNION ALL is faster. The number of columns in each component query must match. The data type must match or be compatible (integer and float can be mixed). The column name in the result set comes from the first query.
+
+<ins> SELECT country \
+,'1980' as year \
+,year_1980 as population \
+FROM country_populations \
+  UNION ALL \
+SELECT country \
+,'1990' as year \
+,year_1990 as population \
+FROM country_populations \
+  UNION ALL \
+SELECT country \
+,'2000' as year \
+,year_2000 as population \
+FROM country_populations \
+  UNION ALL \
+SELECT country \
+,'2010' as year \
+,year_2010 as population \
+FROM country_populations;
+
+| Country | year | population 
+| ----------- | ----------- |----------- | 
+| Canada | 1980 | 24,593
+| Mexico | 1980 | 68,347
+| United States | 1980 | 249,623 
+| .... | .... | .... 
 
