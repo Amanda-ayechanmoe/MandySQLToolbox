@@ -1,19 +1,17 @@
 # MandySQLToolbox
-Collection of useful SQL 
 
 ## Frequency, the occurrence of each value in the field, count the number of records
-
+****
 The number of rows can be found with count(*) and profiled field is in the GROUP BY
 ``` SQL
 SELECT column_name, count(*) as quantity 
 FROM table_name
 GROUP BY 1 ;
 ```
-
 **We can use count(*) when we want the number of records but use count distinct to find out how many unique items there are**
 
 ## Finding duplicates 
-
+****
 ``` SQL
 SELECT count(*)
 FROM
@@ -28,7 +26,7 @@ WEHRE records>1;</ins>
 This will tell us whether there are any cases of duplicates. If the query returns 0, no duplicate.
 
 ## Full details on which records have duplicates
-
+****
 ``` SQL
 SELECT *
 FROM
@@ -42,7 +40,7 @@ WHERE records = 2;
 ```
 
 ## 3 ways to remove duplicate 
-
+****
 1. DISTINCT
    ``` SQL
    SELECT DISTINCT a.customer_id, a.customer_name, a.customer_email
@@ -67,16 +65,18 @@ WHERE records = 2;
    ```
 
 ## Check missing data by comparing values in two tables
-
+****
 We might expect that the customer in the transactions table also has a record in the customer table. To check this, query the table using a LEFT JOIN and add a WHERE condition to find the customers that do not exist in the second table.
 
-<ins> SELECT distinct a.customer_id
+```sql
+SELECT distinct a.customer_id
 FROM transactions a
 LEFT JOIN customers b on a.customer_id = b.customer_id
-WHERE b.customer_id is null ; </ins>
+WHERE b.customer_id is null ;
+```
 
 ## Shaping Data - manipulating the way data is represented in columns and rows
-
+****
 ### 1. Pivoting with CASE statements and aggregation
 It is a way to summarize data sets by arranging the data into rows, according to the value of an attribute, and columns, according to the values of another attribute.
 
@@ -144,3 +144,24 @@ FROM country_populations;
 | United States | 1980 | 249,623 
 | .... | .... | .... 
 
+## Time Zone Conversions
+****
+Many databases are set to Coordinated Universal Time (UTC), the global standard used to regulate clocks and record events in this time zone.
+All local time zones have UTC offset. For example, the offset for PDT (Pacific Standard Time) is UTC - 7 hours, while the offset for PST is UTC - 8 hours.
+
+Converting from one timezone to another can be accomplished with <ins> at time zone </ins> followed by the <ins> destination time zone's abbreviation </ins>
+```sql
+SELECT '2020-09-01 00:00:00 -0' at time zone 'pst';
+```
+convert_timezone or convert_tz function
+```sql
+SELECT convert_timezone('pst', '2020-09-01 00:00:00 -0);
+```
+Check databases' documentation for the exact name and ordering of the target time zone and the source timestamp argument.
+
+| Database | Table Name
+| ----------- | ----------- 
+| Postgres| pg_timezone_names
+| MySQL | mysql.time_zone_names
+| SQL Server | sys.time_zone_info
+| Redshift | pg_timezone_names
